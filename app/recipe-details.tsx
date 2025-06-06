@@ -8,11 +8,13 @@ import {
   Alert,
   Image,
   Animated,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Recipe } from '../lib/types';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -24,7 +26,27 @@ export default function RecipeDetailsPage() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isTimerPaused, setIsTimerPaused] = useState(false);
   const progressAnim = new Animated.Value(0);
-  
+
+  // Theme colors
+  const backgroundColor = useThemeColor({}, 'surface');
+  const primaryColor = useThemeColor({}, 'primary');
+  const secondaryColor = useThemeColor({}, 'secondary');
+  const textColor = useThemeColor({}, 'text');
+  const textSecondaryColor = useThemeColor({}, 'textSecondary');
+  const successColor = useThemeColor({}, 'success');
+    const errorColor = useThemeColor({}, 'error');
+
+  // Create styles with theme colors
+  const styles = createStyles({
+    background: backgroundColor,
+    primary: primaryColor,
+    secondary: secondaryColor,
+    text: textColor,
+    textSecondary: textSecondaryColor,
+    success: successColor,
+    error: errorColor,
+  });
+   
   let recipe: Recipe | null = null;
   
   try {
@@ -194,8 +216,12 @@ export default function RecipeDetailsPage() {
         </View>
       </View>
 
-      {/* Step Content */}
-      <View style={styles.stepContainer}>
+      {/* Step Content - Wrapped in ScrollView */}
+      <ScrollView 
+        style={styles.stepContainer} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.stepBadge}>
           <Text style={styles.stepBadgeText}>Step {currentStep + 1}</Text>
         </View>
@@ -264,7 +290,7 @@ export default function RecipeDetailsPage() {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Navigation */}
       <View style={styles.navigationContainer}>
@@ -300,10 +326,11 @@ export default function RecipeDetailsPage() {
   );
 }
 
-const styles = StyleSheet.create({
+// Create dynamic styles function
+const createStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -332,7 +359,7 @@ const styles = StyleSheet.create({
   recipeTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#333',
+    color: colors.text,
     textAlign: 'center',
   },
   progressContainer: {
@@ -360,8 +387,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
+  scrollContent: {
+    paddingBottom: 20,
+  },
   stepBadge: {
-    backgroundColor: '#FF8A00',
+    backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 20,

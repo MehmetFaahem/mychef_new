@@ -7,20 +7,24 @@ import { Ionicons } from '@expo/vector-icons';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const tabIconSelected = useThemeColor({}, 'tabIconSelected');
+  const tabIconDefault = useThemeColor({}, 'tabIconDefault');
+  const primaryColor = useThemeColor({}, 'primary');
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#FF6B35',
-        tabBarInactiveTintColor: '#8E8E93',
+        tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: '#543461', 
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
-          backgroundColor: 'rgba(52, 0, 98, 0.95)',
+          backgroundColor: `${primaryColor}F2`,
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0.1,

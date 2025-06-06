@@ -18,7 +18,10 @@ import { Recipe } from '../../lib/types';
 import { storageService } from '../../lib/storage';
 import { RecipeCard } from '../../components/RecipeCard';
 import { Toast } from '../../components/Toast';
+import { ThemedText } from '../../components/ThemedText';
+import { ThemedView } from '../../components/ThemedView';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColor } from '../../hooks/useThemeColor';
 
 const { width } = Dimensions.get('window');
 
@@ -33,6 +36,26 @@ export default function SavedRecipesScreen() {
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error' | 'info'>('info');
+
+  // Theme colors
+  const backgroundColor = useThemeColor({}, 'backgroundSecondary');
+  const surfaceColor = useThemeColor({}, 'surface');
+  const primaryColor = useThemeColor({}, 'primary');
+  const secondaryColor = useThemeColor({}, 'secondary');
+  const textColor = useThemeColor({}, 'text');
+  const textSecondaryColor = useThemeColor({}, 'textSecondary');
+    const borderColor = useThemeColor({}, 'border');
+
+  // Create styles with theme colors
+  const styles = createStyles({
+    backgroundSecondary: backgroundColor,
+    surface: surfaceColor,
+    primary: primaryColor,
+    secondary: secondaryColor,
+    text: textColor,
+    textSecondary: textSecondaryColor,
+    border: borderColor,
+  });
 
   const loadSavedRecipes = async () => {
     try {
@@ -174,7 +197,7 @@ export default function SavedRecipesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        colors={['#FF6B35', '#F7931E']}
+        colors={[primaryColor, secondaryColor]}
         style={styles.header}
       >
         <View style={styles.headerContent}>
@@ -258,10 +281,11 @@ export default function SavedRecipesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+// Create styles function to access theme colors
+const createStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.backgroundSecondary,
   },
   header: {
     paddingTop: 20,
@@ -282,16 +306,16 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
   },
   controls: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E1E8ED',
+    borderBottomColor: colors.border,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.backgroundSecondary,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -303,7 +327,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#1A202C',
+    color: colors.text,
   },
   scrollView: {
     flex: 1,
@@ -316,7 +340,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    color: '#64748B',
+    color: colors.textSecondary,
   },
   emptyState: {
     flex: 1,
@@ -328,19 +352,19 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1A202C',
+    color: colors.text,
     marginTop: 20,
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 16,
-    color: '#64748B',
+    color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 30,
   },
   emptyButton: {
-    backgroundColor: '#FF6B35',
+    backgroundColor: colors.secondary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 25,

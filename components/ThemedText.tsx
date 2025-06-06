@@ -5,7 +5,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link' | 'secondary' | 'tertiary';
 };
 
 export function ThemedText({
@@ -16,16 +16,34 @@ export function ThemedText({
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const linkColor = useThemeColor({}, 'primary');
+  const secondaryColor = useThemeColor({}, 'textSecondary');
+  const tertiaryColor = useThemeColor({}, 'textTertiary');
+
+  const getTextColor = () => {
+    switch (type) {
+      case 'link':
+        return linkColor;
+      case 'secondary':
+        return secondaryColor;
+      case 'tertiary':
+        return tertiaryColor;
+      default:
+        return color;
+    }
+  };
 
   return (
     <Text
       style={[
-        { color },
+        { color: getTextColor() },
         type === 'default' ? styles.default : undefined,
         type === 'title' ? styles.title : undefined,
         type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
         type === 'subtitle' ? styles.subtitle : undefined,
         type === 'link' ? styles.link : undefined,
+        type === 'secondary' ? styles.secondary : undefined,
+        type === 'tertiary' ? styles.tertiary : undefined,
         style,
       ]}
       {...rest}
@@ -55,6 +73,14 @@ const styles = StyleSheet.create({
   link: {
     lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
+    textDecorationLine: 'underline',
+  },
+  secondary: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  tertiary: {
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

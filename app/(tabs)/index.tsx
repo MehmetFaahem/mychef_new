@@ -21,7 +21,11 @@ import { Recipe, RecipePreferences } from '../../lib/types';
 import { suggestRecipes, SuggestRecipesInput } from '../../ai/suggestRecipes';
 import { RecipeCard } from '../../components/RecipeCard';
 import { Toast } from '../../components/Toast';
+import { ThemedText } from '../../components/ThemedText';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedButton } from '../../components/ThemedButton';
 import { storageService } from '../../lib/storage';
+import { useThemeColor } from '../../hooks/useThemeColor';
 // import * as ImagePicker from 'expo-image-picker';
 
 const { width } = Dimensions.get('window');
@@ -47,6 +51,31 @@ export default function HomeScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const scrollViewRef = useRef<ScrollView>(null);
+
+  // Theme colors
+  const backgroundColor = useThemeColor({}, 'backgroundSecondary');
+  const surfaceColor = useThemeColor({}, 'surface');
+  const primaryColor = useThemeColor({}, 'primary');
+  const textColor = useThemeColor({}, 'text');
+  const textSecondaryColor = useThemeColor({}, 'textSecondary');
+  const borderColor = useThemeColor({}, 'border');
+  const primaryBackground = useThemeColor({}, 'primaryBackground');
+  const primaryBorder = useThemeColor({}, 'primaryBorder');
+
+  // Create styles with theme colors
+  const styles = createStyles({
+    backgroundSecondary: backgroundColor,
+    surface: surfaceColor,
+    primary: primaryColor,
+    text: textColor,
+    textSecondary: textSecondaryColor,
+    textInverse: useThemeColor({}, 'textInverse'),
+    border: borderColor,
+    primaryBackground: primaryBackground,
+    primaryBorder: primaryBorder,
+    error: useThemeColor({}, 'error'),
+    errorBackground: useThemeColor({}, 'errorBackground'),
+  });
 
   // Initialize data on component mount
   useEffect(() => {
@@ -458,10 +487,11 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+// Create styles function to access theme colors
+const createStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: colors.backgroundSecondary,
   },
   keyboardView: {
     flex: 1,
@@ -473,7 +503,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   header: {
-    backgroundColor: '#6C5CE7',
+    backgroundColor: colors.primary,
     paddingTop: 20,
     paddingBottom: 20,
     paddingHorizontal: 24,
@@ -507,7 +537,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: 'white',
+    color: colors.textInverse,
     letterSpacing: 0.5,
   },
   headerSubtitle: {
@@ -528,10 +558,19 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   welcomeCard: {
+    backgroundColor: colors.surface,
     padding: 24,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(108, 92, 231, 0.2)',
+    borderColor: colors.primaryBorder,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.04,
+    shadowRadius: 16,
+    elevation: 4,
   },
   welcomeHeader: {
     flexDirection: 'row',
@@ -540,7 +579,7 @@ const styles = StyleSheet.create({
   welcomeIconContainer: {
     width: 48,
     height: 48,
-    backgroundColor: '#6C5CE7',
+    backgroundColor: colors.primary,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
@@ -556,7 +595,7 @@ const styles = StyleSheet.create({
   welcomeTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#6C5CE7',
+    color: colors.primary,
     lineHeight: 22,
   },
   inputSection: {
@@ -564,7 +603,7 @@ const styles = StyleSheet.create({
     paddingTop: 32,
   },
   inputCard: {
-    backgroundColor: 'white',
+    backgroundColor: colors.surface,
     padding: 24,
     borderRadius: 24,
     shadowColor: '#000',
@@ -579,12 +618,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2D3436',
+    color: colors.text,
     marginBottom: 8,
   },
   sectionSubtitle: {
     fontSize: 14,
-    color: '#636E72',
+    color: colors.textSecondary,
     marginBottom: 20,
   },
   inputRow: {
@@ -595,18 +634,19 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.border,
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 16,
     fontSize: 16,
-    backgroundColor: 'white',
+    backgroundColor: colors.surface,
+    color: colors.text,
     marginRight: 12,
   },
   addButton: {
     width: 48,
     height: 48,
-    backgroundColor: '#6C5CE7',
+    backgroundColor: colors.primary,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
@@ -617,7 +657,7 @@ const styles = StyleSheet.create({
   recentTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#2D3436',
+    color: colors.text,
     marginBottom: 12,
   },
   chipContainer: {
@@ -626,15 +666,15 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   recentChip: {
-    backgroundColor: 'rgba(108, 92, 231, 0.1)',
+    backgroundColor: colors.primaryBackground,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(108, 92, 231, 0.2)',
+    borderColor: colors.primaryBorder,
   },
   recentChipText: {
-    color: '#6C5CE7',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '500',
   },
@@ -644,11 +684,11 @@ const styles = StyleSheet.create({
   selectedTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#2D3436',
+    color: colors.text,
     marginBottom: 12,
   },
   selectedChip: {
-    backgroundColor: '#6C5CE7',
+    backgroundColor: colors.primary,
     paddingLeft: 16,
     paddingRight: 8,
     paddingVertical: 8,
@@ -657,7 +697,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   selectedChipText: {
-    color: 'white',
+    color: colors.textInverse,
     fontSize: 14,
     fontWeight: '500',
     marginRight: 8,
@@ -676,7 +716,7 @@ const styles = StyleSheet.create({
   preferencesTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#2D3436',
+    color: colors.text,
     marginBottom: 16,
   },
   preferenceRow: {
@@ -685,17 +725,18 @@ const styles = StyleSheet.create({
   preferenceLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#636E72',
+    color: colors.textSecondary,
     marginBottom: 8,
   },
   preferenceInput: {
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
-    backgroundColor: 'white',
+    backgroundColor: colors.surface,
+    color: colors.text,
   },
   generateButton: {
     borderRadius: 16,
@@ -712,7 +753,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   generateButtonText: {
-    color: 'white',
+    color: colors.textInverse,
     fontSize: 16,
     fontWeight: '600',
     letterSpacing: 0.5,
@@ -724,22 +765,22 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    color: '#636E72',
+    color: colors.textSecondary,
     marginTop: 16,
   },
   errorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF5F5',
+    backgroundColor: colors.errorBackground,
     padding: 16,
     marginHorizontal: 24,
     marginTop: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#FFB8B8',
+    borderColor: colors.error,
   },
   errorText: {
-    color: '#FF6B6B',
+    color: colors.error,
     fontSize: 14,
     marginLeft: 8,
     flex: 1,
@@ -751,7 +792,7 @@ const styles = StyleSheet.create({
   recipesTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2D3436',
+    color: colors.text,
     marginBottom: 20,
   },
 });

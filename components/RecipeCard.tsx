@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Recipe } from '../lib/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -25,6 +26,26 @@ export function RecipeCard({
   onDelete 
 }: RecipeCardProps) {
   const router = useRouter();
+  
+  // Theme colors
+  const surfaceColor = useThemeColor({}, 'surface');
+  const primaryColor = useThemeColor({}, 'primary');
+  const secondaryColor = useThemeColor({}, 'secondary');
+  const textColor = useThemeColor({}, 'text');
+  const textSecondaryColor = useThemeColor({}, 'textSecondary');
+  const primaryBackground = useThemeColor({}, 'primaryBackground');
+  const primaryBorder = useThemeColor({}, 'primaryBorder');
+
+  // Create dynamic styles with theme colors
+  const styles = createStyles({
+    surface: surfaceColor,
+    primary: primaryColor,
+    secondary: secondaryColor,
+    text: textColor,
+    textSecondary: textSecondaryColor,
+    primaryBackground: primaryBackground,
+    primaryBorder: primaryBorder,
+  });
 
   const handlePress = () => {
     if (onPress) {
@@ -77,7 +98,7 @@ export function RecipeCard({
           resizeMode="cover"
         />
         <LinearGradient
-          colors={['rgba(108, 92, 231, 0.8)', 'rgba(255, 107, 157, 0.8)']}
+          colors={[`${primaryColor}CC`, `${secondaryColor}CC`]}
           style={styles.gradient}
         >
           <View style={styles.gradientContent}>
@@ -110,7 +131,7 @@ export function RecipeCard({
                 <Ionicons 
                   name={recipe.isSaved ? "bookmark" : "bookmark-outline"} 
                   size={20} 
-                  color={recipe.isSaved ? "#FF6B35" : "white"}
+                  color={recipe.isSaved ? secondaryColor : "white"}
                 />
               </TouchableOpacity>
             )}
@@ -160,8 +181,8 @@ export function RecipeCard({
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.stepsButton}>
-            <Ionicons name="list" size={16} color="#6C5CE7" />
-            <Text style={styles.stepsButtonText}>{recipe.steps.length} steps</Text>
+            <Ionicons name="list" size={16} color={primaryColor} />
+            <Text style={[styles.stepsButtonText, { color: primaryColor }]}>{recipe.steps.length} steps</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -169,9 +190,9 @@ export function RecipeCard({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: any) => StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -285,7 +306,7 @@ const styles = StyleSheet.create({
   },
   ingredients: {
     fontSize: 14,
-    color: '#636E72',
+    color: colors.textSecondary,
     marginBottom: 12,
     lineHeight: 20,
   },
@@ -296,15 +317,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   tag: {
-    backgroundColor: 'rgba(108, 92, 231, 0.1)',
+    backgroundColor: colors.primaryBackground,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(108, 92, 231, 0.2)',
+    borderColor: colors.primaryBorder,
   },
   tagText: {
-    color: '#6C5CE7',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '500',
   },
@@ -314,7 +335,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: '#6C5CE7',
+    backgroundColor: colors.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 12,
@@ -333,13 +354,13 @@ const styles = StyleSheet.create({
   stepsButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(108, 92, 231, 0.1)',
+    backgroundColor: colors.primaryBackground,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 12,
   },
   stepsButtonText: {
-    color: '#6C5CE7',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '500',
     marginLeft: 4,
