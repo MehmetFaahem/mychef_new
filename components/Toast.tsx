@@ -1,20 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { Animated, Dimensions, StyleSheet, Text } from "react-native";
+import { useThemeColor } from "../hooks/useThemeColor";
 
 interface ToastProps {
   message: string;
-  type?: 'success' | 'error' | 'info';
+  type?: "success" | "error" | "info";
   visible: boolean;
   onHide: () => void;
   duration?: number;
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-export function Toast({ message, type = 'info', visible, onHide, duration = 3000 }: ToastProps) {
+export function Toast({
+  message,
+  type = "info",
+  visible,
+  onHide,
+  duration = 3000,
+}: ToastProps) {
   const [slideAnim] = useState(new Animated.Value(-100));
   const [fadeAnim] = useState(new Animated.Value(0));
+
+  // Theme colors
+  const successColor = useThemeColor({}, "success");
+  const errorColor = useThemeColor({}, "error");
+  const infoColor = useThemeColor({}, "info");
 
   useEffect(() => {
     if (visible) {
@@ -60,23 +72,23 @@ export function Toast({ message, type = 'info', visible, onHide, duration = 3000
 
   const getBackgroundColor = () => {
     switch (type) {
-      case 'success':
-        return '#10B981';
-      case 'error':
-        return '#EF4444';
+      case "success":
+        return successColor;
+      case "error":
+        return errorColor;
       default:
-        return '#3B82F6';
+        return infoColor;
     }
   };
 
   const getIcon = () => {
     switch (type) {
-      case 'success':
-        return 'checkmark-circle';
-      case 'error':
-        return 'alert-circle';
+      case "success":
+        return "checkmark-circle";
+      case "error":
+        return "alert-circle";
       default:
-        return 'information-circle';
+        return "information-circle";
     }
   };
 
@@ -101,17 +113,17 @@ export function Toast({ message, type = 'info', visible, onHide, duration = 3000
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 20,
     right: 20,
     zIndex: 9999,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -124,9 +136,9 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   message: {
-    color: 'white',
+    color: "white",
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     flex: 1,
   },
-}); 
+});

@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/mychef.png",
         "backgroundColor": "#ffffff"
@@ -42,9 +43,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "9b5ce8d1-7fd6-454a-a006-8ca67266a0b0"
+        "projectId": "f7806975-f97e-4332-bee6-3f1036375954"
       }
     },
-    "owner": "muhammadfahim"
+    "owner": "fahimpp"
   }
 }
